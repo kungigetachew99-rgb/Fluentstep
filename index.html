@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#172554"><meta name="description" content="A personal English learning app with vocabulary, grammar, pronunciation, schedule and progress.">
+<link rel="manifest" href="manifest.webmanifest">
+<title>FluentStep — English Learning</title>
+<style>
+:root{--navy:#172554;--blue:#2563eb;--sky:#dbeafe;--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#64748b;--line:#e6ebf2;--green:#059669;--amber:#d97706;--radius:20px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:86px}
+button,input,textarea,select{font:inherit}button{cursor:pointer}.app{max-width:760px;margin:auto;min-height:100vh}
+header{background:linear-gradient(135deg,#172554,#1d4ed8);color:white;padding:22px 20px 25px;border-radius:0 0 26px 26px}
+.top{display:flex;justify-content:space-between;align-items:center}.brand{font-size:20px;font-weight:800;letter-spacing:.2px}.date{font-size:12px;color:#dbeafe}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#ffffff25;font-weight:800}
+.greeting{margin:22px 0 4px;font-size:25px;font-weight:800}.sub{color:#dbeafe;font-size:13px}
+.streakrow{display:flex;gap:10px;margin-top:18px}.pill{background:#ffffff1c;border:1px solid #ffffff25;padding:8px 12px;border-radius:30px;font-size:12px}
+main{padding:18px 16px}.page{display:none}.page.active{display:block}.section-head{display:flex;align-items:center;justify-content:space-between;margin:8px 2px 13px}.section-head h2{font-size:19px;margin:0}.muted{color:var(--muted)}.small{font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:0 4px 16px #0f172a08}.stat{font-size:25px;font-weight:800;margin-top:5px}.label{font-size:12px;color:var(--muted)}.icon{font-size:22px}.wide{grid-column:1/-1}
+.progressbar{height:9px;background:#e9eef6;border-radius:20px;overflow:hidden;margin:10px 0 4px}.progressbar span{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#38bdf8);border-radius:20px;width:0}
+.action{border:0;background:var(--blue);color:white;padding:11px 15px;border-radius:13px;font-weight:700}.action.secondary{background:var(--sky);color:#1d4ed8}.action.ghost{background:#f1f5f9;color:#334155}.action.danger{background:#fee2e2;color:#b91c1c}.action.full{width:100%}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.between{display:flex;justify-content:space-between;align-items:center;gap:10px}.list{display:grid;gap:10px}.item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px}.item h3{margin:0 0 3px;font-size:16px}.tag{display:inline-block;background:#eff6ff;color:#1d4ed8;border-radius:30px;padding:3px 9px;font-size:11px;font-weight:700}
+input,textarea,select{width:100%;padding:12px;border:1px solid #dce3ed;border-radius:12px;background:#fff;color:var(--ink);outline:none}input:focus,textarea:focus,select:focus{border-color:#60a5fa;box-shadow:0 0 0 3px #dbeafe}label{display:block;font-size:12px;color:#475569;font-weight:700;margin:10px 0 5px}.form{background:white;padding:16px;border:1px solid var(--line);border-radius:18px;margin-bottom:14px}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:5;padding:7px 4px calc(7px + env(safe-area-inset-bottom))}
+.navinner{width:min(760px,100%);display:flex;justify-content:space-around}.navbtn{border:0;background:transparent;color:#718096;display:grid;gap:2px;justify-items:center;font-size:10px;padding:4px 8px;min-width:55px}.navbtn b{font-size:20px;font-weight:500}.navbtn.active{color:#1d4ed8;font-weight:800}
+.tabs{display:flex;gap:7px;overflow:auto;margin:0 0 14px}.tab{border:1px solid var(--line);background:white;padding:8px 13px;border-radius:30px;white-space:nowrap;font-size:12px}.tab.active{background:var(--navy);color:white}
+.lesson p{margin:8px 0}.example{background:#f0f7ff;padding:12px;border-radius:12px;margin:9px 0}.choice{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}.choice.correct{border-color:#10b981;background:#ecfdf5}.choice.wrong{border-color:#ef4444;background:#fef2f2}
+.empty{text-align:center;padding:24px;color:var(--muted)}.toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);background:#172554;color:white;padding:10px 16px;border-radius:30px;display:none;z-index:10;font-size:13px;max-width:90%}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+@media(min-width:600px){main{padding:22px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}header{padding:26px 26px 30px}}
+</style>
+</head>
+<body><div class="app">
+<header>
+ <div class="top"><div><div class="brand">✦ FluentStep</div><div class="date" id="today"></div></div><div class="avatar">E</div></div>
+ <div class="greeting">Small steps. Fluent English.</div><div class="sub">Build your English, one useful day at a time.</div>
+ <div class="streakrow"><span class="pill">🔥 <b id="streak">0</b> day streak</span><span class="pill">🎯 Daily goal: 5 words</span></div>
+</header>
+<main>
+<section id="dashboard" class="page active">
+ <div class="section-head"><h2>Your learning overview</h2><span class="muted small" id="dashDate"></span></div>
+ <div class="grid">
+  <div class="card"><div class="icon">📚</div><div class="stat" id="wordCount">0</div><div class="label">Words learned</div></div>
+  <div class="card"><div class="icon">🧠</div><div class="stat" id="dueCount">0</div><div class="label">Words to revise</div></div>
+  <div class="card"><div class="icon">✅</div><div class="stat" id="taskCount">0/3</div><div class="label">Today's tasks</div></div>
+  <div class="card"><div class="icon">📈</div><div class="stat" id="totalDays">0</div><div class="label">Active learning days</div></div>
+  <div class="card wide"><div class="between"><b>Today's progress</b><b id="percent">0%</b></div><div class="progressbar"><span id="dashBar"></span></div><div class="small muted">Complete your daily tasks to build consistency.</div></div>
+  <div class="card wide"><div class="between"><div><b>Today's learning plan</b><div class="small muted">A practical 30-minute routine</div></div><span class="tag">30 min</span></div>
+   <div class="row" style="margin-top:12px"><span>📘 Vocabulary · 10 min</span></div><div class="row"><span>✍️ Grammar · 10 min</span></div><div class="row"><span>🎙️ Speak & listen · 10 min</span></div>
+   <button class="action full" style="margin-top:14px" onclick="showPage('schedule')">Open today's tasks</button>
+  </div>
+ </div>
+ <div class="section-head" style="margin-top:22px"><h2>Quick practice</h2></div>
+ <div class="grid">
+  <button class="card" onclick="showPage('vocabulary');setVTab('revision')" style="text-align:left;border:1px solid var(--line)"><div class="icon">🔁</div><b>Revise words</b><div class="small muted">Remember what you learned</div></button>
+  <button class="card" onclick="showPage('pronunciation')" style="text-align:left;border:1px solid var(--line)"><div class="icon">🎧</div><b>Speak aloud</b><div class="small muted">Listen and record practice</div></button>
+ </div>
+</section>
+
+<section id="vocabulary" class="page">
+ <div class="section-head"><h2>Vocabulary builder</h2><span class="tag" id="vocabTotal">0 words</span></div>
+ <div class="tabs"><button class="tab active" onclick="setVTab('add')">＋ Add words</button><button class="tab" onclick="setVTab('list')">Word list</button><button class="tab" onclick="setVTab('revision')">Revision</button></div>
+ <div id="vAdd">
+  <div class="form"><h3 style="margin:0">Add a useful word</h3><div class="small muted">Save new vocabulary with its meaning and an example.</div>
+   <label>English word</label><input id="newWord" placeholder="e.g. perseverance">
+   <label>Meaning (your own language or English)</label><input id="newMeaning" placeholder="Meaning of the word">
+   <label>Example sentence</label><textarea id="newExample" rows="2" placeholder="Perseverance helps me reach my goals."></textarea>
+   <label>Category</label><select id="newCategory"><option>Daily life</option><option>Academic</option><option>Business</option><option>Technology</option><option>General</option></select>
+   <button class="action full" style="margin-top:13px" onclick="addWord()">Save word</button>
+  </div>
+  <div class="card"><b>Word-learning tip</b><p class="muted small">Learn five useful words, make your own sentences, then review them later today. Understanding and using a word is more powerful than memorizing it once.</p></div>
+ </div>
+ <div id="vList" style="display:none"><input id="wordSearch" placeholder="Search your words…" oninput="renderWords()" style="margin-bottom:12px"><div class="list" id="wordList"></div></div>
+ <div id="vRevision" style="display:none"><div class="card" id="revisionCard"></div></div>
+</section>
+
+<section id="grammar" class="page">
+ <div class="section-head"><h2>Grammar studio</h2><span class="tag">Learn + practice</span></div>
+ <div class="tabs"><button class="tab active" onclick="setGTab('lessons')">Daily lessons</button><button class="tab" onclick="setGTab('exercises')">Exercises</button></div>
+ <div id="gLessons" class="list"></div><div id="gExercises" style="display:none"></div>
+</section>
+
+<section id="pronunciation" class="page">
+ <div class="section-head"><h2>Pronunciation lab</h2><span class="tag">Listen · Repeat · Record</span></div>
+ <div class="card">
+  <h3 style="margin-top:0">Listen and repeat</h3><p class="muted small">Choose a practice sentence, listen carefully, then say it aloud. Your phone/browser needs speech support.</p>
+  <select id="speakText"><option>Could you speak more slowly, please?</option><option>I am studying electrical engineering.</option><option>Let me think for a moment.</option><option>Perseverance helps me improve every day.</option><option>My goal is to build useful technology.</option></select>
+  <div class="row" style="margin-top:12px"><button class="action" onclick="speak()">▶ Listen</button><button class="action secondary" onclick="stopSpeak()">■ Stop</button></div>
+ </div>
+ <div class="card" style="margin-top:12px"><h3 style="margin-top:0">Voice recording practice</h3><p class="muted small">Record a short answer, listen to it, and notice one thing to improve. Recordings stay in this page session and are not uploaded.</p>
+  <label>Today's speaking prompt</label><div class="example" id="prompt">What did you learn today, and how can you use it?</div>
+  <button class="action" id="recordBtn" onclick="toggleRecord()">● Start recording</button><audio id="audioPlayback" controls style="display:none;width:100%;margin-top:12px"></audio><div id="recordStatus" class="small muted" style="margin-top:8px">Microphone permission may be required.</div>
+ </div>
+ <div class="card" style="margin-top:12px"><b>Helpful speaking phrases</b><p class="small">• I didn't catch that. Could you repeat it?</p><p class="small">• Could you explain that in another way?</p><p class="small">• In my opinion… / For example… / To summarize…</p></div>
+</section>
+
+<section id="schedule" class="page">
+ <div class="section-head"><h2>Your daily schedule</h2><span class="tag" id="scheduleDate"></span></div>
+ <div class="card"><div class="between"><b>Daily tasks</b><span class="small muted">Tick each task when finished</span></div><div id="tasks" style="margin-top:10px"></div></div>
+ <div class="form" style="margin-top:13px"><h3 style="margin:0">Add your own task</h3><label>Task name</label><input id="taskInput" placeholder="e.g. Review five new words"><label>Time (optional)</label><input id="taskTime" type="time"><button class="action full" style="margin-top:12px" onclick="addTask()">Add task</button></div>
+ <div class="card"><h3 style="margin-top:0">Reminders</h3><p class="muted small">Set a daily reminder on this device. Allow notifications when your browser asks. Some phones require the app to be hosted over HTTPS for notifications.</p><label>Reminder time</label><input type="time" id="reminderTime" value="06:00"><button class="action full" style="margin-top:12px" onclick="setReminder()">Enable daily reminder</button><div id="reminderStatus" class="small muted" style="margin-top:8px"></div></div>
+</section>
+
+<section id="progress" class="page">
+ <div class="section-head"><h2>Your progress</h2><span class="tag">Keep going</span></div>
+ <div class="grid">
+  <div class="card"><div class="icon">📚</div><div class="stat" id="pWords">0</div><div class="label">Vocabulary saved</div></div>
+  <div class="card"><div class="icon">🔥</div><div class="stat" id="pStreak">0</div><div class="label">Current streak</div></div>
+  <div class="card"><div class="icon">📅</div><div class="stat" id="pDays">0</div><div class="label">Active days</div></div>
+  <div class="card"><div class="icon">🎯</div><div class="stat" id="pTasks">0%</div><div class="label">Today's completion</div></div>
+ </div>
+ <div class="card" style="margin-top:13px"><h3 style="margin-top:0">Last 7 days</h3><div id="weekly" class="list"></div></div>
+ <div class="card" style="margin-top:13px"><h3 style="margin-top:0">Learning advice</h3><p class="muted small">Consistency matters more than long sessions. Try to speak for a few minutes every day, use new words in original sentences, and review older vocabulary before adding more.</p></div>
+ <button class="action danger full" style="margin-top:14px" onclick="resetData()">Reset all app data</button>
+</section>
+</main>
+<nav class="bottomnav"><div class="navinner">
+ <button class="navbtn active" data-page="dashboard" onclick="showPage('dashboard')"><b>⌂</b>Home</button>
+ <button class="navbtn" data-page="vocabulary" onclick="showPage('vocabulary')"><b>📚</b>Words</button>
+ <button class="navbtn" data-page="grammar" onclick="showPage('grammar')"><b>✍️</b>Grammar</button>
+ <button class="navbtn" data-page="pronunciation" onclick="showPage('pronunciation')"><b>🎙️</b>Speak</button>
+ <button class="navbtn" data-page="schedule" onclick="showPage('schedule')"><b>🗓️</b>Plan</button>
+ <button class="navbtn" data-page="progress" onclick="showPage('progress')"><b>📈</b>Progress</button>
+</div></nav><div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().slice(0,10);
+const load=(k,d)=>{try{return JSON.parse(localStorage.getItem('fs_'+k))??d}catch{return d}};
+const save=(k,v)=>localStorage.setItem('fs_'+k,JSON.stringify(v));
+let words=load('words',[]), tasks=load('tasks',[]), activity=load('activity',{}), streak=load('streak',0), recorder=null, chunks=[];
+const defaultTasks=[{id:'vocab',name:'Learn five new vocabulary words',time:'06:00',done:false},{id:'grammar',name:'Complete one grammar lesson or exercise',time:'',done:false},{id:'speak',name:'Listen and speak English for 10 minutes',time:'',done:false}];
+function initTasks(){let key=today();let saved=load('daily_'+key,null);if(!saved){tasks=defaultTasks.map(x=>({...x}));save('daily_'+key,tasks)}else tasks=saved}
+function markActivity(){activity[today()]=true;save('activity',activity);let days=Object.keys(activity).sort();let count=0;for(let i=days.length-1;i>=0;i--){let expected=new Date();expected.setDate(expected.getDate()-count);if(days[i]===expected.toISOString().slice(0,10))count++;else break}streak=count;save('streak',streak)}
+function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));renderAll();window.scrollTo(0,0)}
+function setVTab(t){['add','list','revision'].forEach(x=>$('v'+x[0].toUpperCase()+x.slice(1)).style.display=x===t?'block':'none');document.querySelectorAll('#vocabulary .tab').forEach((b,i)=>b.classList.toggle('active',['add','list','revision'][i]===t));if(t==='revision')renderRevision();if(t==='list')renderWords()}
+function addWord(){let word=$('newWord').value.trim(),meaning=$('newMeaning').value.trim();if(!word||!meaning){toast('Add the word and its meaning first.');return}if(words.some(w=>w.word.toLowerCase()===word.toLowerCase())){toast('That word is already in your list.');return}words.unshift({id:Date.now(),word,meaning,example:$('newExample').value.trim(),category:$('newCategory').value,created:today(),due:today(),interval:0,known:0});save('words',words);['newWord','newMeaning','newExample'].forEach(x=>$(x).value='');markActivity();toast('Word saved. Great work!');renderAll()}
+function renderWords(){let q=($('wordSearch')?.value||'').toLowerCase(),filtered=words.filter(w=>(w.word+w.meaning+w.category).toLowerCase().includes(q));$('wordList').innerHTML=filtered.length?filtered.map(w=>`<div class="item"><div class="between"><h3>${esc(w.word)}</h3><span class="tag">${esc(w.category)}</span></div><div>${esc(w.meaning)}</div>${w.example?`<div class="small muted" style="margin-top:5px">“${esc(w.example)}”</div>`:''}<div class="between" style="margin-top:9px"><span class="small muted">Next review: ${w.due}</span><button class="action danger" onclick="deleteWord(${w.id})">Delete</button></div></div>`).join(''):'<div class="empty">No words found. Add your first word!</div>'}
+function deleteWord(id){if(confirm('Delete this word?')){words=words.filter(w=>w.id!==id);save('words',words);renderAll()}}
+let revIndex=0,revWords=[];
+function renderRevision(){revWords=words.filter(w=>w.due<=today());revIndex=0;showRevisionCard()}
+function showRevisionCard(){let box=$('revisionCard');if(!revWords.length){box.innerHTML='<div class="empty">🎉 You are up to date! No words are due for revision.</div>';return}let w=revWords[revIndex];box.innerHTML=`<div class="between"><span class="tag">Word ${revIndex+1} of ${revWords.length}</span><span class="small muted">${w.category}</span></div><h2 style="font-size:28px;margin:18px 0 4px">${esc(w.word)}</h2><button class="action secondary" onclick="this.nextElementSibling.style.display='block'">Show meaning</button><div id="revAnswer" style="display:none;margin-top:13px"><b>${esc(w.meaning)}</b><p class="muted small">${esc(w.example||'Make your own sentence with this word.')}</p><div class="row"><button class="action" onclick="gradeWord(${w.id},true)">I remembered</button><button class="action ghost" onclick="gradeWord(${w.id},false)">Review again</button></div></div>`}
+function gradeWord(id,known){let w=words.find(x=>x.id===id);if(known){w.known++;w.interval=w.interval===0?1:w.interval===1?3:w.interval===3?7:w.interval===7?14:30;w.due=addDays(today(),w.interval)}else{w.interval=0;w.due=today()}save('words',words);markActivity();revIndex++;if(revIndex>=revWords.length)revWords=words.filter(x=>x.due<=today());if(revIndex>=revWords.length)revIndex=0;showRevisionCard();renderAll()}
+function addDays(d,n){let x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)}
+const lessons=[
+{title:'Present simple',desc:'Use it for habits, facts and regular routines.',rule:'Subject + base verb. Add -s/-es with he, she or it.',ex:'I study electrical engineering. / She studies English every morning.',q:'Choose the correct sentence:',opts:['He study every day.','He studies every day.','He studying every day.'],a:1,why:'With he/she/it, add -s or -es to the verb.'},
+{title:'Past simple',desc:'Use it for completed actions in the past.',rule:'Subject + past form of the verb.',ex:'I practiced English yesterday. / We visited the library.',q:'Yesterday, I ___ five new words.',opts:['learn','learned','learning'],a:1,why:'“Yesterday” signals a completed past action: learned.'},
+{title:'Future with “will”',desc:'Use will for predictions, promises and quick decisions.',rule:'Subject + will + base verb.',ex:'I will improve my speaking. / They will build an app.',q:'Choose the correct sentence:',opts:['I will practices.','I will practiced.','I will practice.'],a:2,why:'After will, use the base form of the verb.'},
+{title:'Present perfect',desc:'Connect a past action to the present.',rule:'Subject + have/has + past participle.',ex:'I have learned five words. / She has finished her task.',q:'I ___ finished my lesson.',opts:['have','has','having'],a:0,why:'Use have with I, you, we and they.'},
+{title:'Articles: a, an, the',desc:'Articles come before nouns.',rule:'Use a/an for one nonspecific item; the for a specific item.',ex:'I bought a book. The book is about technology. It is an interesting book.',q:'She is ___ engineering student.',opts:['a','an','the'],a:1,why:'Engineering begins with a vowel sound, so use “an”.'}
+];
+function setGTab(t){$('gLessons').style.display=t==='lessons'?'grid':'none';$('gExercises').style.display=t==='exercises'?'block':'none';document.querySelectorAll('#grammar .tab').forEach((b,i)=>b.classList.toggle('active',['lessons','exercises'][i]===t));if(t==='exercises')renderExercise()}
+function renderLessons(){$('gLessons').innerHTML=lessons.map((l,i)=>`<div class="item lesson"><div class="between"><h3>${i+1}. ${l.title}</h3><span class="tag">5 min</span></div><p class="muted small">${l.desc}</p><div class="example"><b>Rule:</b> ${l.rule}<br><b>Example:</b> ${l.ex}</div><button class="action secondary" onclick="openLesson(${i})">Study lesson</button></div>`).join('')}
+function openLesson(i){let l=lessons[i];$('gExercises').innerHTML=`<div class="card lesson"><span class="tag">Daily lesson</span><h2>${l.title}</h2><p>${l.desc}</p><div class="example"><b>Grammar rule</b><br>${l.rule}<hr><b>Examples</b><br>${l.ex}</div><button class="action" onclick="setGTab('exercises')">Practice this skill</button></div>`;setGTab('exercises')}
+let exIndex=0,exScore=0;
+function renderExercise(){let l=lessons[exIndex%lessons.length];$('gExercises').innerHTML=`<div class="card"><div class="between"><span class="tag">Question ${(exIndex%lessons.length)+1} of ${lessons.length}</span><b>Score: ${exScore}</b></div><h3 style="margin-top:16px">${l.q}</h3>${l.opts.map((o,i)=>`<button class="choice" onclick="answer(${i},${l.a},'${encodeURIComponent(l.why)}')">${o}</button>`).join('')}<div id="feedback" class="small muted"></div><button class="action full" style="margin-top:12px" onclick="nextExercise()">Next question →</button></div>`}
+function answer(i,a,why){let choices=document.querySelectorAll('.choice');choices.forEach((b,j)=>{b.disabled=true;if(j===a)b.classList.add('correct');else if(j===i)b.classList.add('wrong')});$('feedback').textContent=(i===a?'Correct! ':'Not quite. ')+decodeURIComponent(why);if(i===a){exScore++;markActivity()}}
+function nextExercise(){exIndex++;renderExercise()}
+function speak(){if(!('speechSynthesis'in window)){toast('Speech playback is not supported in this browser.');return}speechSynthesis.cancel();let u=new SpeechSynthesisUtterance($('speakText').value);u.lang='en-US';u.rate=.85;speechSynthesis.speak(u);markActivity()}
+function stopSpeak(){if('speechSynthesis'in window)speechSynthesis.cancel()}
+async function toggleRecord(){if(recorder&&recorder.state==='recording'){recorder.stop();$('recordBtn').textContent='● Start recording';return}if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){$('recordStatus').textContent='Recording is not supported in this browser. Try a current version of Chrome.';return}try{let stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];recorder=new MediaRecorder(stream);recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{let blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'}),url=URL.createObjectURL(blob);$('audioPlayback').src=url;$('audioPlayback').style.display='block';$('recordStatus').textContent='Recording ready. Listen and try again, focusing on clear speech.';stream.getTracks().forEach(t=>t.stop());markActivity()};recorder.start();$('recordBtn').textContent='■ Stop recording';$('recordStatus').textContent='Recording… speak clearly and naturally.'}catch(e){$('recordStatus').textContent='Microphone permission was not granted or is unavailable.'}}
+function addTask(){let name=$('taskInput').value.trim();if(!name)return;tasks.push({id:Date.now(),name,time:$('taskTime').value,done:false});save('daily_'+today(),tasks);$('taskInput').value='';$('taskTime').value='';renderAll();toast('Task added')}
+function toggleTask(id){let t=tasks.find(x=>x.id===id);t.done=!t.done;save('daily_'+today(),tasks);if(t.done)markActivity();renderAll()}
+function renderTasks(){$('tasks').innerHTML=tasks.map(t=>`<div class="between" style="padding:11px 0;border-bottom:1px solid var(--line)"><label style="display:flex;align-items:center;gap:10px;margin:0;font-size:14px;font-weight:600;color:${t.done?'#94a3b8':'#172033'}"><input type="checkbox" style="width:19px;height:19px" ${t.done?'checked':''} onchange="toggleTask(${t.id})"><span style="${t.done?'text-decoration:line-through':''}">${esc(t.name)}</span></label><span class="small muted">${t.time||''}</span></div>`).join('')}
+async function setReminder(){let time=$('reminderTime').value;if(!time)return;try{if(!('Notification'in window)){toast('Notifications are not supported here.');return}let permission=await Notification.requestPermission();if(permission!=='granted'){$('reminderStatus').textContent='Notifications are blocked. You can still use your phone alarm.';return}save('reminder',time);$('reminderStatus').textContent='Reminder preference saved for '+time+'. Keep this app installed and allow notifications.';toast('Reminder preference saved')}catch(e){$('reminderStatus').textContent='Your browser does not allow this reminder here. Use your phone alarm as a backup.'}}
+function renderProgress(){let done=tasks.filter(t=>t.done).length,pct=tasks.length?Math.round(done/tasks.length*100):0;$('pWords').textContent=words.length;$('pStreak').textContent=streak;$('pDays').textContent=Object.keys(activity).length;$('pTasks').textContent=pct+'%';let days=[];for(let i=6;i>=0;i--){let d=addDays(today(),-i);days.push(`<div class="between"><span>${new Date(d+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})}</span><span class="tag">${activity[d]?'✓ Active':'—'}</span></div>`)}$('weekly').innerHTML=days.join('')}
+function renderAll(){let due=words.filter(w=>w.due<=today()).length,done=tasks.filter(t=>t.done).length,pct=tasks.length?Math.round(done/tasks.length*100):0;$('wordCount').textContent=words.length;$('vocabTotal').textContent=words.length+' words';$('dueCount').textContent=due;$('taskCount').textContent=done+'/'+tasks.length;$('totalDays').textContent=Object.keys(activity).length;$('percent').textContent=pct+'%';$('dashBar').style.width=pct+'%';$('streak').textContent=streak;$('scheduleDate').textContent=today();renderTasks();renderProgress();if($('vList').style.display!=='none')renderWords()}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function resetData(){if(confirm('This will permanently clear your words, tasks and progress on this device. Continue?')){Object.keys(localStorage).filter(k=>k.startsWith('fs_')).forEach(k=>localStorage.removeItem(k));words=[];activity={};streak=0;initTasks();renderAll();toast('App data reset')}}
+$('today').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});$('dashDate').textContent=new Date().toLocaleDateString(undefined,{month:'short',day:'numeric'});initTasks();renderLessons();renderAll();
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script></div></body></html>
